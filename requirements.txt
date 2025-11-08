@@ -9,6 +9,9 @@ langchain-community # For LangChain community integrations like FAISS
 langchain-huggingface # For using Hugging Face embedding models
 sentence-transformers # A dependency for HuggingFaceEmbeddings
 
+# --- UI & Presentation ---
+rich 
+
 # --- API Server ---
 fastapi
 uvicorn[standard]
