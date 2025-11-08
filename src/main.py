@@ -4,12 +4,11 @@ from src.agent.main_agent import task_agent
 from src.storage.vector_store import task_store
 from src.models.task import Task
 from src.core.logging_config import setup_logging
-from src.memory.short_term_memory import short_term_memory
 
 logger = logging.getLogger(__name__)
 
 def display_tasks():
-    # ... (This function remains unchanged)
+    # ... (This function is correct and remains unchanged) ...
     logger.info("\n--- Current Tasks ---")
     tasks = task_store.list_tasks()
     if not tasks:
@@ -27,7 +26,7 @@ def display_tasks():
 
 def main_cli():
     """
-    Main function with the corrected agent loop logic.
+    Main function with the final, corrected duplicate detection logic.
     """
     setup_logging()
     logger.info("Welcome to the AI Task Manager Agent!")
@@ -37,31 +36,20 @@ def main_cli():
         try:
             user_input = input("> ").strip()
             
-            if user_input.lower() == 'exit':
-                logger.info("Goodbye!")
-                break
+            if user_input.lower() == 'exit': logger.info("Goodbye!"); break
+            if user_input.lower() == 'list': display_tasks(); continue
+            if not user_input: continue
             
-            if user_input.lower() == 'list':
-                display_tasks()
-                continue
-            
-            if not user_input:
-                continue
-            
-            # --- CORRECTED LOGIC FLOW ---
-            
-            # 1. ALWAYS parse the text first to understand the core task.
+            # 1. Parse the text to understand the user's intended task.
             created_task: Task = task_agent.create_task_from_text(user_input)
             
-            # 2. NOW, check the PARSED TITLE against the memory.
-            if short_term_memory.was_recently_created(created_task.title):
-                logger.warning(f"Task '{created_task.title}' seems to be a duplicate of a recent one. Aborting.")
-                continue  # Skip saving and updating memory
+            # 2. Use the DATABASE as the single source of truth for duplicate detection.
+            if task_store.task_exists_by_title(created_task.title):
+                logger.warning(f"Task '{created_task.title}' already exists in the database. Aborting.")
+                continue
             
-            # 3. If it's not a duplicate, save it to the database and memory.
+            # 3. If it's a new task, save it to the database.
             task_store.add_task(created_task)
-            short_term_memory.add_task(created_task)
-
             logger.info(f"\n✨ Task '{created_task.title}' was successfully created and saved!")
             display_tasks()
 
