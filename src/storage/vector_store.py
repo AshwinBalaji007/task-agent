@@ -1,22 +1,28 @@
 import chromadb
-from typing import List, Dict, Any, cast
+from typing import List, Dict, Any, cast, Optional
 from src.models.task import Task
 from src.storage.base_store import BaseTaskStore
 
 class ChromaTaskStore(BaseTaskStore):
     """
-    A task storage implementation using ChromaDB as the vector store.
-    This version includes robust type checking to prevent runtime errors.
+    A task storage implementation using ChromaDB.
+    Supports both persistent (on-disk) and in-memory clients for flexibility.
     """
-    def __init__(self, path: str = "./chroma_db"):
-        client = chromadb.PersistentClient(path=path)
+    def __init__(self, path: Optional[str] = "./chroma_db"):
+        # This is a key change for testability:
+        # If a path is provided, use a persistent client that writes to disk.
+        # If the path is None, use an EphemeralClient for in-memory testing.
+        if path:
+            client = chromadb.PersistentClient(path=path)
+        else:
+            client = chromadb.EphemeralClient() # In-memory, no disk writes
+        
         self._collection = client.get_or_create_collection(name="tasks")
 
+    # ... (the rest of the file remains exactly the same) ...
     def _task_to_metadata(self, task: Task) -> Dict[str, Any]:
         """Converts a Task object to a metadata dictionary for Chroma, excluding None values."""
         metadata = task.model_dump(exclude_none=True)
-        # ChromaDB metadata values must be strings, ints, floats, or bools.
-        # Convert datetime objects to ISO format strings.
         for key, value in metadata.items():
             if hasattr(value, 'isoformat'):
                 metadata[key] = value.isoformat()
@@ -38,36 +44,28 @@ class ChromaTaskStore(BaseTaskStore):
     def get_task(self, task_id: str) -> Task | None:
         """Retrieves a task from ChromaDB by its ID with improved type safety."""
         result = self._collection.get(ids=[task_id])
-        
-        # Safely access the list of metadatas
         metadatas_list = result.get('metadatas')
         if not metadatas_list:
             return None
         
-        # The list might not be empty, but its first element could be None
         first_metadata = metadatas_list[0]
         if first_metadata:
-            # Cast the specific Metadata type to a generic Dict for our function
             return self._metadata_to_task(cast(Dict[str, Any], first_metadata))
-            
         return None
 
     def list_tasks(self) -> List[Task]:
         """Retrieves all tasks from the collection with improved type safety."""
         results = self._collection.get()
         tasks: List[Task] = []
-        
-        # Safely access the list of metadatas
         metadatas_list = results.get('metadatas')
         if not metadatas_list:
             return []
         
         for meta in metadatas_list:
             if meta is not None:
-                # Cast the specific Metadata type to a generic Dict for our function
                 tasks.append(self._metadata_to_task(cast(Dict[str, Any], meta)))
-        
         return sorted(tasks, key=lambda t: t.created_at, reverse=True)
 
-# --- Singleton instance ---
+
+# The singleton for the main app still uses the default persistent client. Perfect.
 task_store = ChromaTaskStore()
