@@ -1,0 +1,19 @@
+# Core ML/AI
+google-generativeai # Official Google Gemini SDK
+langchain           # Core LangChain framework
+langchain-google-genai # LangChain integration for Gemini
+
+# Data & Storage
+pydantic            # For robust data models (e.g., the Task model)
+chromadb            # For the local vector store (Bonus Points)
+
+# API & Server (Optional, but good to have)
+fastapi             # For building a REST API
+uvicorn             # ASGI server for FastAPI
+
+# Configuration & Utilities
+python-dotenv       # For loading environment variables from .env file
+PyYAML              # For loading configs/settings.yaml
+
+# Testing
+pytest              # For running tests
