@@ -1,35 +1,42 @@
 import chromadb
-# --- THIS IS THE FIX ---
-# We import the correct ABSTRACT TYPE for the client, not the factory function.
 from chromadb.api import ClientAPI
-# ---------------------
 from typing import List, Dict, Any, cast
+
 from src.models.task import Task
 from src.storage.base_store import BaseTaskStore
 
 class ChromaTaskStore(BaseTaskStore):
-    """
-    A task storage implementation using ChromaDB, designed for testability.
-    """
-    # And now we use the correct type in the __init__ method.
     def __init__(self, client: ClientAPI):
-        """
-        Initializes the store with a provided ChromaDB client.
-        """
         self._client = client
         self._collection = self._client.get_or_create_collection(name="tasks")
 
     @classmethod
     def for_production(cls, path: str = "./chroma_db") -> "ChromaTaskStore":
-        """Factory method to create a store with a persistent on-disk client."""
         client = chromadb.PersistentClient(path=path)
         return cls(client=client)
 
     @classmethod
     def for_testing(cls) -> "ChromaTaskStore":
-        """Factory method to create a store with an in-memory client."""
         client = chromadb.EphemeralClient()
         return cls(client=client)
+
+    # --- NEW METHOD ---
+    def task_exists_by_title(self, title: str) -> bool:
+        """
+        Efficiently checks if a task with the exact same title already exists
+        in the database using a metadata filter.
+        
+        Args:
+            title: The title of the task to check for.
+            
+        Returns:
+            True if a task with the same title exists, False otherwise.
+        """
+        # ChromaDB's 'where' filter is the key to this efficient check.
+        # We search for any documents where the metadata 'title' field is an exact match.
+        results = self._collection.get(where={"title": title})
+        # If the 'ids' list in the result is not empty, a match was found.
+        return len(results['ids']) > 0
 
     # ... (all other methods remain exactly the same) ...
     def _task_to_metadata(self, task: Task) -> Dict[str, Any]:
@@ -66,5 +73,5 @@ class ChromaTaskStore(BaseTaskStore):
             if meta is not None: tasks.append(self._metadata_to_task(cast(Dict[str, Any], meta)))
         return sorted(tasks, key=lambda t: t.created_at, reverse=True)
 
-# The singleton uses the clean factory method.
+
 task_store = ChromaTaskStore.for_production()
