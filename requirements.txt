@@ -1,19 +1,25 @@
-# Core ML/AI
-google-generativeai # Official Google Gemini SDK
-langchain           # Core LangChain framework
-langchain-google-genai # LangChain integration for Gemini
+# --- LLM & Agent Frameworks ---
+langchain
+langchain-google-genai
 
-# Data & Storage
-pydantic            # For robust data models (e.g., the Task model)
-chromadb            # For the local vector store (Bonus Points)
+# --- Vector Databases & Embeddings ---
+chromadb
+faiss-cpu          # The core FAISS library (CPU version)
+langchain-community # For LangChain community integrations like FAISS
+langchain-huggingface # For using Hugging Face embedding models
+sentence-transformers # A dependency for HuggingFaceEmbeddings
 
-# API & Server (Optional, but good to have)
-fastapi             # For building a REST API
-uvicorn             # ASGI server for FastAPI
+# --- API Server ---
+fastapi
+uvicorn[standard]
 
-# Configuration & Utilities
-python-dotenv       # For loading environment variables from .env file
-PyYAML              # For loading configs/settings.yaml
+# --- Data Validation & Settings Management ---
+pydantic
+pydantic-settings
 
-# Testing
-pytest              # For running tests
+# --- Configuration & Environment ---
+pyyaml
+python-dotenv
+
+# --- Testing ---
+pytest
