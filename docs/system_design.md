@@ -9,35 +9,32 @@ The system is built upon a set of core software and MLOps engineering principles
 -   **Modularity:** Each component of the system (LLM interaction, storage, agent logic) is separated into distinct modules. This makes the system easier to understand, maintain, and upgrade. For example, the `ChromaDB` storage layer could be swapped with another database without changing the core agent logic.
 -   **Separation of Concerns:** The agent's "brain" (`src/agent`) is distinct from its "memory" (`src/storage`). Crucially, the data schema expected from the LLM (`LLMTaskSchema`) is separated from the application's internal data model (`Task`). This prevents "prompt leakage" and makes the system more robust against unpredictable LLM behavior.
 -   **Scalability:** The architecture is designed to scale. By including a FastAPI server (`src/api`), the agent's logic can be easily exposed as a microservice, ready to serve a web frontend or be integrated into a larger system.
--   **Testability:** Components are designed for testability. The storage layer, for example, is built with factory methods (`for_production`, `for_testing`) and uses dependency injection, allowing for isolated unit tests with an in-memory database.
+-   **Testability:** Components are designed for testability. The storage layer, for example, is built with factory methods and dependency injection, allowing for isolated unit tests with a clean, in-memory database for every test run.
 
 ## 2. System Architecture & Data Flow
 
 The agent operates in a sequential, multi-step process to ensure reliability and data integrity.
 
-### Architecture Diagram (Mermaid)
+### Architecture Diagram
 
 ```mermaid
 graph TD
-    subgraph "User Interface"
+    subgraph "🟦 User Interface"
         A[CLI / FastAPI Server]
     end
 
-    subgraph "Agent Core (src/agent)"
+    subgraph "🟨 Agent Core (src/agent)"
         B[TaskManagerAgent]
         C[Prompt Template]
         D{Parsing & Validation}
     end
 
-    subgraph "External Services"
-        E["(External) Google Gemini LLM"]
+    subgraph "🟩 External Services"
+        E["Google Gemini LLM API"]
     end
 
-    subgraph "Data & Storage (src/storage)"
+    subgraph "🟪 Storage & Data Models"
         F[ChromaDB Vector Store]
-    end
-
-    subgraph "Data Models (src/models)"
         G[LLMTaskSchema]
         H[Full 'Task' Model]
     end
@@ -53,8 +50,12 @@ graph TD
     F -- "9. Exists? (True/False)" --> B
     B -- "10. Upgrade to Full Model" --> H
     B -- "11. Save Task" --> F
-    B -- "12. Return Success" --> A
+    B -- "12. User Feedback (Success / Warning)" --> A
 ```
+***
+**Legend:**  
+🟦 User Interaction &nbsp;&nbsp;&nbsp; 🟨 Agentic Reasoning &nbsp;&nbsp;&nbsp; 🟩 External Services &nbsp;&nbsp;&nbsp; 🟪 Data Layer
+***
 
 ### Data Flow Explained
 
@@ -74,12 +75,11 @@ graph TD
 
 8.  **Persistence:** The final, complete `Task` object is saved to the `ChromaDB` database.
 
-9.  **Feedback:** The agent reports success or failure back to the user interface.
+9.  **Feedback to User:** The agent reports the final status (e.g., "Task created successfully" or "Duplicate task warning") back to the user interface.
 
 ## 3. Key Technology Choices
 
 -   **LangChain:** Used as the primary framework to orchestrate interactions with the LLM, manage prompts, and parse outputs. Its declarative syntax (LCEL) simplifies the agent's logic.
--   **Pydantic:** Used extensively for data validation. The two-schema approach (`LLMTaskSchema` and `Task`) is a critical design choice for ensuring robustness.
+-   **Pydantic:** Used extensively for data validation. The two-schema approach (`LLMTaskSchema` and `Task`) is a critical design choice for ensuring robustness against unpredictable LLM behavior.
 -   **ChromaDB:** Chosen as the vector store for its simplicity and persistence. It serves not only as a task database but also enables powerful future capabilities like semantic search, which is demonstrated in the project's notebooks with FAISS.
 -   **Rich & FastAPI:** These libraries are chosen to provide a professional and scalable user interface, demonstrating that the agent is not just a script but the core of a larger potential application.
-
