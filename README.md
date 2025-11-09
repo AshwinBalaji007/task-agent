@@ -11,15 +11,15 @@ An AI-powered agent that takes natural language input for tasks, intelligently c
 
 ### ✨ Features
 
-*   **   Natural Language Understanding:** Leverages Google's Gemini LLM via LangChain to parse complex user requests.
-*   **   Structured Data Extraction:** Intelligently converts unstructured text into a validated Pydantic data model (`Task`), identifying titles, categories, priorities, and due dates.
-*   **   Persistent Vector Storage:** Uses ChromaDB to store tasks, enabling both persistence and future semantic search capabilities.
-*   **   Real-time Duplicate Detection:** Employs an efficient metadata filter on the database to prevent duplicate tasks from being created.
-*   **   Polished CLI:** A beautiful and user-friendly command-line interface built with `rich` for formatted tables, status indicators, and clear feedback.
-*   **   Ready for Deployment:**
+*   **🧠 Natural Language Understanding:** Leverages Google's Gemini LLM via LangChain to parse complex user requests.
+*   **🤖 Structured Data Extraction:** Intelligently converts unstructured text into a validated Pydantic data model (`Task`), identifying titles, categories, priorities, and due dates.
+*   **💾 Persistent Vector Storage:** Uses ChromaDB to store tasks, enabling both persistence and future semantic search capabilities.
+*   **🔍 Real-time Duplicate Detection:** Employs an efficient metadata filter on the database to prevent duplicate tasks from being created.
+*   **💅 Polished CLI:** A beautiful and user-friendly command-line interface built with `rich` for formatted tables, status indicators, and clear feedback.
+*   **🚀 Ready for Deployment:**
     *   **API Included:** A ready-to-use FastAPI server (`/src/api`) to expose the agent's functionality as a web service.
     *   **Containerized:** A `Dockerfile` is provided for easy, reproducible deployment in any environment.
-*   **   Fully Tested & Verified:** The project includes a full test suite with `pytest` and a CI/CD pipeline using GitHub Actions to ensure code quality and stability.
+*   **✅ Fully Tested & Verified:** The project includes a full test suite with `pytest` and a CI/CD pipeline using GitHub Actions to ensure code quality and stability.
 
 ---
 
