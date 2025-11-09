@@ -22,14 +22,4 @@ def setup_logging():
         stream=sys.stdout  # Log to standard out
     )
     
-    # Example usage in any other file:
-    #
-    # import logging
-    # logger = logging.getLogger(__name__)
-    # logger.info("This is an info message.")
-    # logger.debug("This is a debug message.")
-    #
-    # To use, call setup_logging() once at the start of your main.py.
-
-# You can call this function at the very beginning of src/main.py
-# for a demonstration of its effect.
+    

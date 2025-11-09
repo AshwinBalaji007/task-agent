@@ -1,11 +1,8 @@
 from datetime import datetime
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-# CHANGED: We now import the simpler LLMTaskSchema for the parser.
 from src.models.task import LLMTaskSchema, TaskCategory, TaskPriority
 
-# The parser now ONLY knows about the fields we want the LLM to generate.
-# This prevents it from leaking internal fields like 'id' into the prompt.
 pydantic_parser = PydanticOutputParser(pydantic_object=LLMTaskSchema)
 
 task_creation_prompt = PromptTemplate(

@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from src.llm.client import llm_client
 from src.agent.prompt_templates import task_creation_prompt, pydantic_parser
-from src.models.task import Task, LLMTaskSchema  # Import both models
+from src.models.task import Task, LLMTaskSchema 
 
 def sanitize_and_extract_json(llm_output: str) -> str:
     """
@@ -45,13 +45,13 @@ class TaskManagerAgent:
         print(f"Raw LLM Output:\n{raw_llm_output}")
 
         try:
-            # Step 1: Sanitize the output to extract ONLY the JSON part.
+            # Sanitize the output to extract ONLY the JSON part.
             clean_json_str = sanitize_and_extract_json(raw_llm_output)
 
-            # Step 2: Parse the clean string into the simpler LLMTaskSchema.
+            # Parse the clean string into the simpler LLMTaskSchema.
             parsed_llm_data = pydantic_parser.parse(clean_json_str)
 
-            # Step 3: Create the final, complete Task object.
+            # Create the final, complete Task object.
             final_task = Task(**parsed_llm_data.model_dump())
             
             print(f"Successfully parsed task: {final_task.title}")

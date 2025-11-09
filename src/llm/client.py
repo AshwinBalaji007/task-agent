@@ -25,7 +25,6 @@ def get_llm_client() -> ChatGoogleGenerativeAI:
     llm = ChatGoogleGenerativeAI(
         model=settings.llm.model_name,
         temperature=settings.llm.temperature,
-        # You can add more parameters here if needed, e.g., top_p, top_k
     )
     
     return llm

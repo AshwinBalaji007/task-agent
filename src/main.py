@@ -1,8 +1,5 @@
 import logging
 from typing import List
-
-# --- Import Rich ---
-# Use 'rprint' for rich printing and Table for formatted tables
 from rich import print as rprint
 from rich.table import Table
 from rich.console import Console
@@ -13,10 +10,9 @@ from src.storage.vector_store import task_store
 from src.models.task import Task
 from src.core.logging_config import setup_logging
 
-# Set up logging for background processes, but use Rich for UI
 setup_logging()
 logger = logging.getLogger(__name__)
-console = Console() # For printing status updates
+console = Console() 
 
 
 def display_tasks(tasks: List[Task]):
@@ -29,7 +25,7 @@ def display_tasks(tasks: List[Task]):
     table.add_column("Category", style="green")
     table.add_column("Due Date", style="yellow")
     
-    # Sort tasks by creation date
+    
     sorted_tasks = sorted(tasks, key=lambda t: t.created_at)
 
     for i, task in enumerate(sorted_tasks, 1):
@@ -53,7 +49,7 @@ def main_cli():
     rprint("🧠 [bold green]Welcome to the AI Task Manager Agent![/bold green]")
     rprint("Type 'list' to see tasks, 'exit' to quit, or enter a new one.")
 
-    # Fetch initial tasks to show on startup
+    
     initial_tasks = task_store.list_tasks()
     if initial_tasks:
         display_tasks(initial_tasks)

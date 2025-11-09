@@ -4,10 +4,10 @@ langchain-google-genai
 
 # --- Vector Databases & Embeddings ---
 chromadb
-faiss-cpu          # The core FAISS library (CPU version)
-langchain-community # For LangChain community integrations like FAISS
-langchain-huggingface # For using Hugging Face embedding models
-sentence-transformers # A dependency for HuggingFaceEmbeddings
+faiss-cpu          
+langchain-community 
+langchain-huggingface 
+sentence-transformers 
 
 # --- UI & Presentation ---
 rich 

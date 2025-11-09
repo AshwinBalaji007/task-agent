@@ -8,9 +8,6 @@ TaskCategory = Literal["Work", "Personal", "Study", "Fitness", "Other"]
 TaskPriority = Literal["Low", "Medium", "High", "Urgent"]
 
 
-# NEW: The schema for the LLM's output.
-# This only contains fields the LLM should generate, preventing it from
-# trying to create internal fields like 'id' or 'created_at'.
 class LLMTaskSchema(BaseModel):
     """
     Defines the schema of the data we expect the LLM to generate.
@@ -23,7 +20,6 @@ class LLMTaskSchema(BaseModel):
     due_date: Optional[datetime] = Field(None, description="The due date for the task")
 
 
-# This is our complete, internal data model. It remains the same.
 class Task(BaseModel):
     """
     Represents a full, structured task within our application.

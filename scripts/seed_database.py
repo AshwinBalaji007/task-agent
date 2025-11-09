@@ -1,7 +1,6 @@
 import sys
-from datetime import datetime, timedelta, timezone  # <-- IMPORT timezone
+from datetime import datetime, timedelta, timezone
 
-# Ensure the main 'src' directory is in the Python path.
 sys.path.append('.')
 
 from src.models.task import Task
@@ -16,7 +15,7 @@ def seed_database():
     """
     print("--- Starting Database Seeding ---")
     
-    # Use timezone.utc to make all datetimes timezone-aware
+
     now_utc = datetime.now(timezone.utc)
 
     sample_tasks = [
@@ -25,14 +24,14 @@ def seed_database():
             category="Work",
             priority="High",
             description="Complete the data analysis and write the executive summary.",
-            due_date=now_utc + timedelta(days=5) # <-- FIX: Use aware datetime
+            due_date=now_utc + timedelta(days=5) 
         ),
         Task(
             title="Schedule annual team offsite",
             category="Work",
             priority="Medium",
             description="Coordinate with HR and find a suitable venue for the first week of next month.",
-            due_date=now_utc + timedelta(days=14) # <-- FIX: Use aware datetime
+            due_date=now_utc + timedelta(days=14) 
         ),
         Task(
             title="Buy groceries for the week",

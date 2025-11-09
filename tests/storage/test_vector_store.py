@@ -1,8 +1,6 @@
 import pytest
 from collections.abc import Iterator
 import chromadb
-# --- THIS IS THE KEY ---
-# We need to import the Settings class to configure our test client.
 from chromadb.config import Settings
 
 from src.storage.vector_store import ChromaTaskStore
