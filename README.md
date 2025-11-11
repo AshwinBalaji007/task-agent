@@ -161,4 +161,4 @@ The project is organized with a clean, scalable structure suitable for productio
 
 ### Video Walkthrough
 
-**Link:** [[Your Unlisted YouTube/Vimeo Link Here]]()
+**Link:** [[Vimeo Link Here]](https://vimeo.com/1135606896?fl=ip&fe=ec)
